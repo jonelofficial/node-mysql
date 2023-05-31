@@ -22,12 +22,25 @@ export const getNote = async (req, res, next) => {
   }
 };
 
+export const createNote = async (req, res, next) => {
+  try {
+    const { title, contents } = req.body;
+    await Notes.createNote(title, contents);
+
+    res.status(201).json({ message: "Success creating note." });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateNote = async (req, res, next) => {
   try {
     const id = req.params.noteId;
     const { title, contents } = req.body;
 
     const data = await Notes.updateNote(title, contents, id);
+    if (data.length <= 0)
+      return res.status(404).json({ message: "No item found." });
     res.status(201).json({ message: "Success update note.", data: data });
   } catch (err) {
     next(err);
@@ -40,7 +53,7 @@ export const deleteNote = async (req, res, next) => {
 
     const data = await Notes.deleteNote(id);
     if (!data) return res.status(404).json({ message: "No item found." });
-    res.status(201).json({ message: data });
+    res.status(201).json({ message: "Success delete note." });
   } catch (err) {
     next(err);
   }

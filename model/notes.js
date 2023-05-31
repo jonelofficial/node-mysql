@@ -9,6 +9,13 @@ const Notes = {
     const [result] = await pool.query(`SELECT * FROM notes WHERE id = ?`, [id]);
     return result;
   },
+  createNote: async (title, contents) => {
+    const [result] = await pool.query(
+      `INSERT INTO notes (title, contents) VALUES (?,?)`,
+      [title, contents]
+    );
+    return result;
+  },
   updateNote: async (title, contents, id) => {
     await pool.query(`UPDATE notes SET title = ? , contents = ? WHERE id = ?`, [
       title,
